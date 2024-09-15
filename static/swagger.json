@@ -1,0 +1,310 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API for heart disease prediction and data visualization.",
+    "version": "1.0.0",
+    "title": "Heart Disease Prediction API"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/predict": {
+      "post": {
+        "summary": "Predict heart disease based on patient data",
+        "description": "Provide patient data and receive a prediction on heart disease.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Patient data for heart disease prediction",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "age": {"type": "integer", "example": 63},
+                "sex": {"type": "integer", "example": 1},
+                "cp": {"type": "integer", "example": 3},
+                "trestbps": {"type": "integer", "example": 145},
+                "chol": {"type": "integer", "example": 233},
+                "fbs": {"type": "integer", "example": 1},
+                "restecg": {"type": "integer", "example": 0},
+                "thalach": {"type": "integer", "example": 150},
+                "exang": {"type": "integer", "example": 0},
+                "oldpeak": {"type": "number", "example": 2.3},
+                "slope": {"type": "integer", "example": 0},
+                "ca": {"type": "integer", "example": 0},
+                "thal": {"type": "integer", "example": 1}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prediction result",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "prediction": {
+                  "type": "string",
+                  "example": "Có khả năng"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          }
+        }
+      }
+    },
+    "/plot": {
+      "post": {
+        "summary": "Plot the prediction result",
+        "description": "Generate a plot showing the prediction result for the provided patient data.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Patient data for prediction plot",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "age": {"type": "integer", "example": 63},
+                "sex": {"type": "integer", "example": 1},
+                "cp": {"type": "integer", "example": 3},
+                "trestbps": {"type": "integer", "example": 145},
+                "chol": {"type": "integer", "example": 233},
+                "fbs": {"type": "integer", "example": 1},
+                "restecg": {"type": "integer", "example": 0},
+                "thalach": {"type": "integer", "example": 150},
+                "exang": {"type": "integer", "example": 0},
+                "oldpeak": {"type": "number", "example": 2.3},
+                "slope": {"type": "integer", "example": 0},
+                "ca": {"type": "integer", "example": 0},
+                "thal": {"type": "integer", "example": 1}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plot showing the prediction result",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Error in generating plot"
+          }
+        }
+      }
+    },
+    "/plot_model_accuracy": {
+      "get": {
+        "summary": "Plot model accuracy comparison as a bar chart",
+        "description": "Receive a plot comparing the accuracy scores of different models.",
+        "responses": {
+          "200": {
+            "description": "Model accuracy comparison bar chart image",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Error in generating plot"
+          }
+        }
+      }
+    },
+    "/plot_target_distribution": {
+      "get": {
+        "summary": "Plot distribution of target values",
+        "description": "Receive a plot of the distribution of the target values.",
+        "responses": {
+          "200": {
+            "description": "Target distribution bar chart image",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Error in generating plot"
+          }
+        }
+      }
+    },
+    "/plot_data_distribution": {
+      "get": {
+        "summary": "Plot distribution of dataset features",
+        "description": "Receive plots of the distribution for each feature in the dataset.",
+        "responses": {
+          "200": {
+            "description": "Data distribution histograms image",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Error in generating plot"
+          }
+        }
+      }
+    },
+    "/plot_feature_comparison": {
+      "post": {
+        "summary": "Plot comparison of user data with average feature values",
+        "description": "Generate a bar chart comparing the provided patient data with the average values from the dataset.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Patient data for feature comparison",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "age": {"type": "integer", "example": 63},
+                "sex": {"type": "integer", "example": 1},
+                "cp": {"type": "integer", "example": 3},
+                "trestbps": {"type": "integer", "example": 145},
+                "chol": {"type": "integer", "example": 233},
+                "fbs": {"type": "integer", "example": 1},
+                "restecg": {"type": "integer", "example": 0},
+                "thalach": {"type": "integer", "example": 150},
+                "exang": {"type": "integer", "example": 0},
+                "oldpeak": {"type": "number", "example": 2.3},
+                "slope": {"type": "integer", "example": 0},
+                "ca": {"type": "integer", "example": 0},
+                "thal": {"type": "integer", "example": 1}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feature comparison bar chart image",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Error in generating plot"
+          }
+        }
+      }
+    },
+    "/extract_from_image": {
+      "post": {
+        "summary": "Extract text from an image",
+        "description": "Upload an image to extract and recognize text from it.",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file",
+            "required": true,
+            "description": "Image file for text extraction and OCR",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Extracted text and bounding boxes",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "text": {"type": "string", "example": "Detected Text"},
+                      "box": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {"type": "number"},
+                          "example": [100, 200]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error in processing the image"
+          }
+        }
+      }
+    },
+    "/chat": {
+      "post": {
+        "summary": "Send a message to the chatbot",
+        "description": "Send a message to the chatbot and get a response",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "body",
+            "description": "The message to send to the chatbot",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chatbot response",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Message": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Hello"
+        }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "string",
+          "example": "Hello! How can I help you today?"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "No message provided"
+        }
+      }
+    }
+  }
+}

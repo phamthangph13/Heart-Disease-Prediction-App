@@ -1,0 +1,59 @@
+{"intents": [
+        {"tag": "greeting",
+         "patterns": ["Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
+         "responses": ["Hello", "Good to see you again", "Hi there, how can I help?"],
+         "context": [""]
+        },
+        {"tag": "goodbye",
+         "patterns": ["Bye", "See you later", "Goodbye", "Nice chatting to you, bye", "Till next time"],
+         "responses": ["See you!", "Have a nice day", "Bye! Come back again soon."],
+         "context": [""]
+        },
+        {"tag": "thanks",
+         "patterns": ["Thanks", "Thank you", "That's helpful", "Awesome, thanks", "Thanks for helping me"],
+         "responses": ["My pleasure", "You're Welcome"],
+         "context": [""]
+        },
+        {"tag": "query",
+         "patterns": ["What is Simplilearn?"],
+         "responses": ["Simplilearn is the popular online Bootcamp & online courses learning platform "],
+         "context": [""]
+        },
+  {
+    "tag": "heart_disease_intro",
+    "patterns": ["What is heart disease?", "Tell me about heart disease", "Can you explain heart disease?", "What causes heart disease?"],
+    "responses": ["Heart disease refers to a range of conditions that affect the heart, including coronary artery disease, heart attacks, and heart failure. It is often caused by factors like high blood pressure, high cholesterol, smoking, and diabetes."],
+    "context": [""]
+  },
+  {
+    "tag": "heart_disease_symptoms",
+    "patterns": ["What are the symptoms of heart disease?", "How do I know if I have heart disease?", "List the symptoms of heart disease", "What should I look for regarding heart disease?"],
+    "responses": ["Common symptoms of heart disease include chest pain or discomfort, shortness of breath, pain in the neck, jaw, or back, nausea, and lightheadedness. If you experience these symptoms, it's important to consult a healthcare professional."],
+    "context": [""]
+  },
+  {
+    "tag": "heart_disease_risk_factors",
+    "patterns": ["What are the risk factors for heart disease?", "How can I reduce my risk of heart disease?", "Tell me about heart disease risk factors", "What increases my risk for heart disease?"],
+    "responses": ["Risk factors for heart disease include high blood pressure, high cholesterol, smoking, obesity, lack of physical activity, diabetes, and a family history of heart disease. Managing these factors can help reduce your risk."],
+    "context": [""]
+  },
+  {
+    "tag": "heart_disease_prevention",
+    "patterns": ["How can I prevent heart disease?", "What steps can I take to avoid heart disease?", "Give me tips to prevent heart disease", "How do I protect myself from heart disease?"],
+    "responses": ["Preventing heart disease involves maintaining a healthy lifestyle. This includes eating a balanced diet, exercising regularly, not smoking, managing stress, and keeping your blood pressure and cholesterol levels in check."],
+    "context": [""]
+  },
+  {
+    "tag": "heart_disease_treatment",
+    "patterns": ["How is heart disease treated?", "What are the treatments for heart disease?", "Tell me about heart disease treatments", "How do doctors treat heart disease?"],
+    "responses": ["Treatment for heart disease depends on the specific condition and may include lifestyle changes, medications, and procedures such as angioplasty or surgery. Consult with a healthcare provider for a treatment plan tailored to your needs."],
+    "context": [""]
+  },
+  {
+    "tag": "heart_disease_statistics",
+    "patterns": ["What are the statistics for heart disease?", "How common is heart disease?", "Give me heart disease statistics", "Tell me about heart disease prevalence"],
+    "responses": ["Heart disease is a leading cause of death globally. According to the World Health Organization, cardiovascular diseases are responsible for an estimated 17.9 million deaths each year, representing 32% of all global deaths."],
+    "context": [""]
+  }
+
+    ]}
