@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, request, jsonify, send_file
 import numpy as np
 import io
@@ -83,14 +84,117 @@ def predict_class(sentence):
         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
     return return_list
 
-def get_response(intents_list, intents_json):
+def extract_data(message):
+    extracted_data = {}
+    for key, value in data_map.items():
+        match = re.search(value['regex'], message, re.IGNORECASE)
+        if match:
+            extracted_data[key] = match.group(1).strip()  # Save the extracted value
+
+    # Convert extracted values to appropriate types
+    patient_data = {
+        "age": int(extracted_data.get('age', 0)),
+        "sex": 1 if extracted_data.get('sex', '').lower() == 'male' else 0,  # 1 for male, 0 for female
+        "cp": int(extracted_data.get('cp', 0)),
+        "trestbps": int(extracted_data.get('trestbps', 0)),
+        "chol": int(extracted_data.get('chol', 0)),
+        "fbs": int(extracted_data.get('fbs', 0)),
+        "restecg": 0 if extracted_data.get('restecg', '').lower() == 'normal' else 1,  # Assuming normal = 0
+        "thalach": int(extracted_data.get('thalach', 0)),
+        "exang": 1 if extracted_data.get('exang', '').lower() == 'have' else 0,  # 1 for angina, 0 for no angina
+        "oldpeak": float(extracted_data.get('oldpeak', 0.0)),
+        "slope": int(extracted_data.get('slope', 0)),
+        "ca": int(extracted_data.get('ca', 0)),  # Default to 0 if not found
+        "thal": int(extracted_data.get('thal', 0))  # Default to 0 if not found
+    }
+
+    return patient_data
+
+def get_response(intents_list, intents_json, message):
     tag = intents_list[0]['intent']
     list_of_intents = intents_json['intents']
+
     for i in list_of_intents:
         if i['tag'] == tag:
-            result = random.choice(i['responses'])
-            break
-    return result
+            if tag == 'predict_heart_disease_provide_data':
+                patient_data = extract_data(message)  # Get the patient data as a dictionary
+
+                # Check if patient_data contains valid information
+                if patient_data:
+                    data_string = ", ".join(f"{key}: {value}" for key, value in patient_data.items())
+
+                    # Call the prediction API
+                    try:
+                        response = requests.post('http://localhost:5000/predict', json=patient_data)
+
+                        if response.status_code != 200:
+                            return f"Error in prediction API: {response.text}"
+
+                        prediction = response.json().get('prediction', 'Error in prediction')
+                        return f'Here is your data: {data_string}. I would predict for you: you have {prediction} heart disease.'
+                    except Exception as e:
+                        return f"Error calling prediction API: {str(e)}"
+                else:
+                    return "No data extracted."
+            else:
+                return random.choice(i['responses'])
+
+    return "I'm sorry, I didn't understand that."
+
+data_map = {
+    "age": {
+        "regex": r"(\d+)\s*years\s*old",  # Captures age
+        "aliases": ["Aged", "Years"]
+    },
+    "sex": {
+        "regex": r"sex\s*is\s*(male|female)",  # Captures "male" or "female"
+        "aliases": ["Gender", "MaleFemale"]
+    },
+    "cp": {
+        "regex": r"chest pain type\s*(\d+)",  # Captures chest pain type
+        "aliases": ["ChestPainType", "ChestPain"]
+    },
+    "trestbps": {
+        "regex": r"resting blood pressure\s*is\s*(\d+)",  # Captures resting blood pressure
+        "aliases": ["BloodPressure", "TrestBloodPressure"]
+    },
+    "chol": {
+        "regex": r"cholesterol level\s*is\s*(\d+)",  # Captures cholesterol level
+        "aliases": ["Cholesterol", "CholLevel"]
+    },
+    "fbs": {
+        "regex": r"fasting blood sugar\s*is\s*(\d+)",  # Captures fasting blood sugar
+        "aliases": ["FastingBloodSugar", "FBS"]
+    },
+    "restecg": {
+        "regex": r"resting ECG results\s*are\s*(normal|abnormal)",  # Captures ECG results
+        "aliases": ["RestingECG", "RestingECGResults"]
+    },
+    "thalach": {
+        "regex": r"maximum heart rate achieved\s*is\s*(\d+)",  # Captures max heart rate
+        "aliases": ["MaxHeartRate", "ThalMax"]
+    },
+    "exang": {
+        "regex": r"exercise-induced angina\s*(yes|no|do not have|have)",  # Adjusted to capture variations
+        "aliases": ["ExerciseInducedAngina", "ExAng"]
+    },
+    "oldpeak": {
+        "regex": r"old peak\s*is\s*([\d.]+)",  # Captures old peak value
+        "aliases": ["Depression", "OldPeakValue"]
+    },
+    "slope": {
+        "regex": r"slope of the peak exercise ST segment\s*is\s*(\d+|0)",  # Captures slope value
+        "aliases": ["SlopeOfPeak", "SlopeType"]
+    },
+    "ca": {
+        "regex": r"major vessels colored by fluoroscopy\s*is\s*(\d+)",  # Ensure the statement is clear
+        "aliases": ["NumberOfMajorVessels", "CaCount"]
+    },
+    "thal": {
+        "regex": r"thalassemia status\s*is\s*(\d+)",  # Captures thalassemia status
+        "aliases": ["Thalassemia", "ThalType"]
+    }
+}
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -100,7 +204,7 @@ def chat():
             return jsonify({"error": "No message provided"}), 400
 
         ints = predict_class(message)
-        res = get_response(ints, intents)
+        res = get_response(ints, intents, message)  # Gọi hàm với message
         return jsonify({"response": res})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -179,7 +283,7 @@ def predict_heart_disease():
         prediction = best_model.predict(patient_data)
 
         # Returning prediction result
-        result = "Possible" if prediction[0] == 1 else "No ability."
+        result = "Possible" if prediction[0] == 1 else "No ability"
         return jsonify({"prediction": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -391,7 +495,8 @@ def handle_message(data):
         # Predict the class of the message
         ints = predict_class(message)
         # Get a response based on the predicted class
-        response = get_response(ints, intents)
+        response = get_response(ints, intents, message)
+
         # Send the response back to the client
         emit('response', {'response': response})
     except Exception as e:
